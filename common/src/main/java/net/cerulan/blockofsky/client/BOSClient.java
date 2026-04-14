@@ -124,7 +124,7 @@ public class BOSClient {
             return;
         }
 
-        PoseStack poseStack = renderData.poseStack();
+        //PoseStack poseStack = renderData.poseStack();
         final float delta = renderData.partialTick();
         Matrix4f projectionMatrix = renderData.projectionMatrix();
         LevelRenderer levelRenderer = mc.levelRenderer;
@@ -140,19 +140,22 @@ public class BOSClient {
         final float renderDistance = gameRenderer.getRenderDistance();
         final boolean hasSpecialFog = mc.level.effects().isFoggyAt(Mth.floor(cameraPos.x), Mth.floor(cameraPos.z)) || mc.gui.getBossOverlay().shouldCreateWorldFog();
         FogRenderer.setupFog(camera, FogRenderer.FogMode.FOG_SKY, renderDistance, hasSpecialFog, delta);
+        
+        Matrix4f skyRotationMatrix = new Matrix4f();
+        skyRotationMatrix.rotation(camera.rotation().invert());
+        
         RenderSystem.setShader(GameRenderer::getPositionShader);
-        levelRenderer.renderSky(poseStack.last().pose(), projectionMatrix, delta, camera, false, () -> FogRenderer.setupFog(camera, FogRenderer.FogMode.FOG_SKY, renderDistance, hasSpecialFog, delta));
+        levelRenderer.renderSky(skyRotationMatrix, projectionMatrix, delta, camera, false, () -> FogRenderer.setupFog(camera, FogRenderer.FogMode.FOG_SKY, renderDistance, hasSpecialFog, delta));
 
         org.joml.Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushMatrix();
-        modelViewStack.mul(poseStack.last().pose());
-        //modelViewStack.mul(poseStack.last().pose());
+        modelViewStack.set(skyRotationMatrix);
         RenderSystem.applyModelViewMatrix();
 
         if (mc.options.getCloudsType() != CloudStatus.OFF) {
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-            levelRenderer.renderClouds(poseStack, poseStack.last().pose(), projectionMatrix, delta, cameraPos.x, cameraPos.y, cameraPos.z);
+            levelRenderer.renderClouds(renderData.poseStack, skyRotationMatrix, projectionMatrix, delta, cameraPos.x, cameraPos.y, cameraPos.z);
         }
 
         RenderSystem.depthMask(false);
