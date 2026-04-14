@@ -1,5 +1,7 @@
 # Block Of Sky
 A simple mod that adds blocks that render the sky (or an end portal)
+Disclosure: Ported with MAJOR help from an LLM.
+
 
 ## Downloads
 | Site       | Link      |
