@@ -11,6 +11,7 @@ include("common")
 include("fabric-like")
 include("fabric")
 include("quilt")
+include("neoforge")
 
 
 rootProject.name = "blockofsky"
