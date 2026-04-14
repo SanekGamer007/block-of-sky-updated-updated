@@ -16,15 +16,13 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import com.mojang.serialization.MapCodec;
 
 public class SkyBlock extends BaseEntityBlock {
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
-    protected SkyBlock() {
-        super(Properties.of()
-                .mapColor(MapColor.STONE)
-                .instrument(NoteBlockInstrument.BASEDRUM)
-                .requiresCorrectToolForDrops()
-                .strength(1.5F, 6.0F));
+
+    public SkyBlock(Properties properties) {
+        super(properties);
         registerDefaultState(defaultBlockState().setValue(ACTIVE, true));
     }
 
@@ -86,12 +84,27 @@ public class SkyBlock extends BaseEntityBlock {
         return state.getValue(ACTIVE) ? RenderShape.INVISIBLE : RenderShape.MODEL;
     }
 
+    public static final MapCodec<SkyBlock> CODEC = simpleCodec(SkyBlock::new);
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(ACTIVE);
     }
 
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
     public static class VoidBlock extends SkyBlock {
+       
+        public VoidBlock(Properties properties) {
+            super(properties);
+        }
+
+        @Override
+        protected MapCodec<? extends BaseEntityBlock> codec() {
+            return simpleCodec(VoidBlock::new); 
+        }
 
         @Override
         public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {

@@ -141,17 +141,18 @@ public class BOSClient {
         final boolean hasSpecialFog = mc.level.effects().isFoggyAt(Mth.floor(cameraPos.x), Mth.floor(cameraPos.z)) || mc.gui.getBossOverlay().shouldCreateWorldFog();
         FogRenderer.setupFog(camera, FogRenderer.FogMode.FOG_SKY, renderDistance, hasSpecialFog, delta);
         RenderSystem.setShader(GameRenderer::getPositionShader);
-        levelRenderer.renderSky(poseStack, projectionMatrix, delta, camera, false, () -> FogRenderer.setupFog(camera, FogRenderer.FogMode.FOG_SKY, renderDistance, hasSpecialFog, delta));
+        levelRenderer.renderSky(poseStack.last().pose(), projectionMatrix, delta, camera, false, () -> FogRenderer.setupFog(camera, FogRenderer.FogMode.FOG_SKY, renderDistance, hasSpecialFog, delta));
 
-        PoseStack modelViewStack = RenderSystem.getModelViewStack();
-        modelViewStack.pushPose();
-        modelViewStack.mulPoseMatrix(poseStack.last().pose());
+        org.joml.Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
+        modelViewStack.pushMatrix();
+        modelViewStack.mul(poseStack.last().pose());
+        //modelViewStack.mul(poseStack.last().pose());
         RenderSystem.applyModelViewMatrix();
 
         if (mc.options.getCloudsType() != CloudStatus.OFF) {
-            RenderSystem.setShader(GameRenderer::getPositionTexColorNormalShader);
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-            levelRenderer.renderClouds(poseStack, projectionMatrix, delta, cameraPos.x, cameraPos.y, cameraPos.z);
+            levelRenderer.renderClouds(poseStack, poseStack.last().pose(), projectionMatrix, delta, cameraPos.x, cameraPos.y, cameraPos.z);
         }
 
         RenderSystem.depthMask(false);
@@ -159,7 +160,7 @@ public class BOSClient {
 
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
-        modelViewStack.popPose();
+        modelViewStack.popMatrix();
         RenderSystem.applyModelViewMatrix();
         FogRenderer.setupNoFog();
     }

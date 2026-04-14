@@ -18,10 +18,23 @@ public class BlockOfSkyMod {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(MOD_ID, Registries.ITEM);
     public static final DeferredRegister<BlockEntityType<?>> BE_TYPES = DeferredRegister.create(MOD_ID, Registries.BLOCK_ENTITY_TYPE);
 
-    private static final ResourceLocation sky_block = new ResourceLocation(MOD_ID, "sky_block");
-    private static final ResourceLocation void_block = new ResourceLocation(MOD_ID, "void_block");
-    public static final RegistrySupplier<Block> SKY_BLOCK = BLOCKS.register(sky_block, SkyBlock::new);
-    public static final RegistrySupplier<Block> VOID_BLOCK = BLOCKS.register(void_block, SkyBlock.VoidBlock::new);
+    private static final ResourceLocation sky_block = ResourceLocation.fromNamespaceAndPath(MOD_ID, "sky_block");
+    private static final ResourceLocation void_block = ResourceLocation.fromNamespaceAndPath(MOD_ID, "void_block");
+    public static final RegistrySupplier<Block> SKY_BLOCK = BLOCKS.register(sky_block, () -> new SkyBlock(
+            Block.Properties.of()
+                    .mapColor(net.minecraft.world.level.material.MapColor.STONE)
+                    .instrument(net.minecraft.world.level.block.state.properties.NoteBlockInstrument.BASEDRUM)
+                    .requiresCorrectToolForDrops()
+                    .strength(1.5F, 6.0F)
+    ));
+
+    public static final RegistrySupplier<Block> VOID_BLOCK = BLOCKS.register(void_block, () -> new SkyBlock.VoidBlock(
+            Block.Properties.of()
+                    .mapColor(net.minecraft.world.level.material.MapColor.COLOR_BLACK)
+                    .instrument(net.minecraft.world.level.block.state.properties.NoteBlockInstrument.BASEDRUM)
+                    .requiresCorrectToolForDrops()
+                    .strength(1.5F, 6.0F)
+    ));
     public static final RegistrySupplier<BlockEntityType<SkyBlockEntity>> SKY_BE_TYPE = BE_TYPES.register(sky_block, () -> BlockEntityType.Builder.of(SkyBlockEntity::new, SKY_BLOCK.get(), VOID_BLOCK.get()).build(null));
 
     public static final RegistrySupplier<Item> SKY_BLOCK_ITEM = ITEMS.register(sky_block, () -> new BlockItem(SKY_BLOCK.get(), new Item.Properties().arch$tab(CreativeModeTabs.FUNCTIONAL_BLOCKS)));

@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.client.DeltaTracker;
+//import org.joml.Matrix4f;
 
 @Mixin(LevelRenderer.class)
 public abstract class LevelRendererMixin implements LevelRendererBOS {
@@ -22,8 +24,8 @@ public abstract class LevelRendererMixin implements LevelRendererBOS {
     @Final
     private RenderBuffers renderBuffers;
 
-    @Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;endBatch(Lnet/minecraft/client/renderer/RenderType;)V", ordinal = 6, shift = At.Shift.AFTER))
-    private void renderLevelBOS(PoseStack poseStack, float delta, long time, boolean blockOutlines, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matrix, CallbackInfo ci) {
+    @Inject(method = "renderLevel", at = @At("RETURN"))
+    private void renderLevelBOS(DeltaTracker deltaTracker, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
         renderBuffers.bufferSource().endBatch(BOSClient.SKY_RENDER_TYPE);
     }
 

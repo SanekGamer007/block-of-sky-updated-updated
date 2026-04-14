@@ -31,12 +31,10 @@ public class SkyBlockEntity extends BlockEntity {
         return skyType;
     }
 
-    @Override
     protected void saveAdditional(CompoundTag compoundTag) {
         compoundTag.putString("skyType", this.skyType.name());
     }
 
-    @Override
     public void load(CompoundTag compoundTag) {
         if (!compoundTag.contains("skyType")) {
             return;
