@@ -2,14 +2,15 @@
   "schemaVersion": 1,
   "id": "blockofsky",
   "version": "${version}",
-  "name": "Block Of Sky",
+  "name": "Block Of Sky Unofficial Port",
   "description": "Adds a block to render the sky",
   "authors": [
+    "snk07",
     "LuminaSapphira"
   ],
   "contact": {
-    "sources": "https://github.com/CerulanLumina/block-of-sky",
-    "issues": "https://github.com/CerulanLumina/block-of-sky/issues"
+    "sources": "https://github.com/SanekGamer007/block-of-sky-updated-updated",
+    "issues": "https://github.com/SanekGamer007/block-of-sky-updated-updated/issues"
   },
   "license": "LGPL-3.0",
   "icon": "icon.png",
@@ -26,9 +27,9 @@
     "blockofsky-common.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14",
-    "fabric": ">=0.87.0",
-    "minecraft": ">=1.20.1",
+    "fabricloader": ">=0.16.10",
+    "fabric": ">=0.115.0",
+    "minecraft": ">=1.21.1",
     "architectury": ">=9.1.12"
   }
 }
